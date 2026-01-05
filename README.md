@@ -45,14 +45,17 @@ flowchart TD
     A[Client<br/>(CLI / Browser)] --> B[FastAPI<br/>(app.py)]
     B --> C[Session Store]
     C --> D[LangGraph Workflow]
-    D --> E[Supervisor Node]
-    E --> F[Intent Router]
-    F --> G[RAG Tool]
-    F --> H[EMI Tool]
-    F --> I[Loan Tool]
-    G --> J[Conversation State]
-    H --> J
-    I --> J
+    
+    subgraph LangGraph
+        D --> E[Supervisor Node]
+        E --> F[Intent Router]
+        F --> G[RAG Tool]
+        F --> H[EMI Tool]
+        F --> I[Loan Tool]
+        G --> J[Conversation State]
+        H --> J
+        I --> J
+    end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
