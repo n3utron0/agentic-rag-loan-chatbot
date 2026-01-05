@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.pyc
+.env
+*.sqlite3
+data/
+GOOGLE_APPLICATION_CREDENTIALS
+rag_query.py
+*.db
+.chroma/
+.vscode/

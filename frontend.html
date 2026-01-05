@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RBL Bank - Chatbot Connected</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind to use the 'Inter' font and RBL-inspired colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'bank-primary': '#A50000', // Maroon/Dark Red for RBL style
+                        'bank-secondary': '#D22B2B', // Brighter Red Accent
+                        'bank-background': '#fefcfb', // Off-white for a softer look
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styles for the chat interface */
+        .chat-container {
+            transition: all 0.3s ease-in-out;
+            transform-origin: bottom right;
+        }
+
+        /* Responsive height adjustment for smaller screens */
+        @media (max-width: 640px) {
+            .chat-window {
+                /* Ensures it still respects mobile viewport limits */
+                width: 90vw;
+                height: 70vh;
+                max-height: 400px;
+                right: 5vw;
+                bottom: 5vh;
+            }
+        }
+
+        /* CSS Keyframes for Subtle Floating Effect */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+
+            /* Moves up slightly */
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        /* Apply the floating animation to the chat icon */
+        #chatIcon {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* V2: Improve chat bubble styling for contrast and modern look */
+        .chat-bubble-user {
+            background-color: #e5e7eb;
+            /* bg-gray-200 */
+            color: #1f2937;
+            /* text-gray-800 */
+        }
+
+        .chat-bubble-bot {
+            background-color: #D22B2B;
+            /* bank-secondary */
+            color: white;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Custom utility for extra large shadow */
+        .shadow-3xl {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        /* --- Typing Indicator Styles (New) --- */
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background-color: white;
+            border-radius: 50%;
+            animation: dot-pulse-anim 1s infinite ease-in-out;
+        }
+
+        /* Apply staggered delay to dots using nth-child */
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes dot-pulse-anim {
+
+            0%,
+            100% {
+                opacity: 0.4;
+                transform: scale(0.8);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
+    </style>
+</head>
+
+<body class="font-sans bg-bank-background min-h-screen flex flex-col">
+
+    <!-- Main Website Content (Placeholder/Ambiance) -->
+    <header class="bg-bank-primary text-white shadow-xl z-10">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 class="text-3xl font-extrabold tracking-tight">RBL Bank <span
+                    class="text-bank-secondary text-sm ml-2 font-normal italic">| Digital Services</span></h1>
+            <nav class="hidden md:flex space-x-4">
+                <a href="#"
+                    class="px-3 py-2 rounded-full hover:bg-bank-secondary/40 transition-all font-medium">Personal
+                    Banking</a>
+                <a href="#" class="px-3 py-2 rounded-full hover:bg-bank-secondary/40 transition-all font-medium">Wealth
+                    Management</a>
+                <a href="#" class="px-3 py-2 rounded-full hover:bg-bank-secondary/40 transition-all font-medium">Contact
+                    Us</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- V2: Updated main content section with a background pattern/gradient -->
+    <main class="flex-grow flex items-center justify-center p-8 bg-gradient-to-br from-gray-200 to-bank-background">
+        <div
+            class="bg-white p-12 rounded-2xl shadow-2xl text-center max-w-2xl border-b-8 border-bank-secondary transition-all hover:shadow-3xl transform hover:-translate-y-1">
+            <h2 class="text-5xl font-black text-bank-primary mb-4 tracking-tight">Future-Ready Banking</h2>
+            <p class="text-xl text-gray-700 mb-6 border-b pb-4">
+                Showcasing a professional, responsive user interface with an integrated, intelligent customer support
+                agentic bot built on RAG architecture.
+            </p>
+            <div class="text-left space-y-3">
+                <div class="flex items-start">
+                    <span class="text-bank-secondary mr-3 mt-1">&#10003;</span>
+                    <p class="text-lg text-gray-600">Built with modern web standards (Tailwind CSS, Single-File HTML).
+                    </p>
+                </div>
+                <div class="flex items-start">
+                    <span class="text-bank-secondary mr-3 mt-1">&#10003;</span>
+                    <p class="text-lg text-gray-600">Features the official RBL Bank color scheme for authenticity.</p>
+                </div>
+                <div class="flex items-start">
+                    <span class="text-bank-secondary mr-3 mt-1">&#10003;</span>
+                    <p class="text-lg text-gray-600">Now connected to a FastAPI backend endpoint.</p>
+                </div>
+            </div>
+            <p class="text-xs text-gray-400 mt-8 italic">
+                (This is a non-interactive, design demonstration environment.)
+            </p>
+        </div>
+    </main>
+
+    <!-- Chatbot Container (Fixed position, bottom right) -->
+    <div id="chatContainer" class="chat-container fixed bottom-6 right-6 z-50">
+
+        <!-- Chat Icon (Initial State) - Floating effect (V2: Larger size, new icon) -->
+        <button id="chatIcon"
+            class="w-16 h-16 bg-bank-secondary hover:bg-bank-primary text-white rounded-full shadow-2xl 
+                       flex items-center justify-center cursor-pointer transition-transform duration-300 transform hover:scale-110"
+            onclick="openChat()">
+            <!-- Inline SVG Chat Icon: message-square-text (representing conversation) -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-message-square-text">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                <line x1="9" x2="15" y1="10" y2="10" />
+                <line x1="9" x2="13" y1="14" y2="14" />
+            </svg>
+        </button>
+
+        <!-- Chat Window (V2: Softer corners, shadow-3xl, resized) -->
+        <div id="chatWindow" class="chat-window hidden absolute bottom-0 right-0 w-96 h-[480px]
+                                    bg-white rounded-2xl shadow-3xl flex flex-col overflow-hidden">
+
+            <!-- Header with Controls (V2: Smoother header with stronger bottom shadow) -->
+            <div class="flex justify-between items-center p-4 bg-bank-primary text-white shadow-lg rounded-t-2xl">
+                <div class="flex items-center">
+                    <span class="font-bold text-lg">RBL Bot - Assistance</span>
+                </div>
+                <div class="flex space-x-2">
+                    <!-- Minimize Button -->
+                    <button onclick="minimizeChat()" class="p-1 rounded-full hover:bg-white/20 transition-colors"
+                        title="Minimize">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-minus">
+                            <path d="M5 12h14" />
+                        </svg>
+                    </button>
+                    <!-- Close Button -->
+                    <button onclick="closeChat()" class="p-1 rounded-full hover:bg-red-500/80 transition-colors"
+                        title="Close">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-x">
+                            <path d="M18 6 6 18" />
+                            <path d="m6 6 12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Messages Area (V2: Softer background) -->
+            <div id="messages" class="flex-grow p-4 space-y-3 overflow-y-auto bg-gray-100">
+                <!-- Bot Welcome Message (Initial Message for the user to understand the connection) -->
+                <div class="flex justify-start">
+                    <div class="chat-bubble-bot p-3 rounded-xl rounded-tl-sm max-w-[85%]">
+                        Chat service initialized! Send a message to connect with the FastAPI backend at
+                        `http://localhost:8000/chat`.
+                    </div>
+                </div>
+
+                <!-- TYPING INDICATOR (New Element) -->
+                <div id="typingIndicator" class="hidden flex justify-start">
+                    <div class="chat-bubble-bot p-3 rounded-xl rounded-tl-sm max-w-[85%]">
+                        <div class="flex items-center space-x-1">
+                            <span class="text-sm italic mr-1">RBL Bot is typing</span>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Input Area (V2: Integrated look, rounded-full) -->
+            <div class="p-3 border-t border-gray-200 bg-white">
+                <div class="flex space-x-2">
+                    <input type="text" id="chatInput" placeholder="Ask about loans or EMI..."
+                        class="flex-grow p-3 border border-gray-300 rounded-full focus:ring-2 focus:ring-bank-secondary focus:border-bank-secondary text-sm transition-all shadow-inner">
+                    <button id="sendButton" onclick="sendMessage()"
+                        class="bg-bank-secondary text-white p-3 rounded-full hover:bg-bank-primary transition-all flex items-center justify-center shadow-md transform hover:scale-105">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-send">
+                            <path d="m22 2-7 20-4-9-9-4Z" />
+                            <path d="M22 2 11 13" />
+                        </svg>
+                    </button>
+                </div>
+                <p class="text-[10px] text-gray-400 mt-2 text-center">Connected to `http://localhost:8000/chat`</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- API Configuration and Session Management ---
+        const API_URL = "http://localhost:8000/chat";
+
+        // Use a simple global variable for the session ID
+        let sessionId = localStorage.getItem('rblChatSessionId');
+        if (!sessionId) {
+            sessionId = crypto.randomUUID();
+            localStorage.setItem('rblChatSessionId', sessionId);
+        }
+
+        console.log(`Initialized Session ID: ${sessionId}`);
+
+
+        // --- DOM Elements ---
+        const chatIcon = document.getElementById('chatIcon');
+        const chatWindow = document.getElementById('chatWindow');
+        const chatInput = document.getElementById('chatInput');
+        const sendButton = document.getElementById('sendButton');
+        const messagesContainer = document.getElementById('messages');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+
+        // --- UI Feedback Functions ---
+        function showLoader() {
+            // CRITICAL CHANGE: Move the typing indicator to the END of the container
+            // This ensures it appears *below* any message just sent by the user.
+            messagesContainer.appendChild(typingIndicator);
+            typingIndicator.classList.remove('hidden');
+            // Scroll to the bottom to make the loader visible
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function hideLoader() {
+            typingIndicator.classList.add('hidden');
+        }
+
+        function toggleInputState(disabled) {
+            chatInput.disabled = disabled;
+            sendButton.disabled = disabled;
+            if (disabled) {
+                sendButton.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                sendButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                chatInput.focus();
+            }
+        }
+
+        function displayMessage(text, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${isUser ? 'justify-end' : 'justify-start'}`;
+
+            const bubble = document.createElement('div');
+            // Use innerHTML to handle the line breaks
+            bubble.className = `p-3 rounded-xl max-w-[85%] ${isUser
+                ? 'chat-bubble-user rounded-tr-sm'
+                : 'chat-bubble-bot rounded-tl-sm'}`;
+            bubble.innerHTML = text.replace(/\n/g, "<br>");
+
+            messageDiv.appendChild(bubble);
+            messagesContainer.appendChild(messageDiv);
+
+            // Scroll to the bottom of the messages
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // --- Core API Call Logic with Retry ---
+        async function fetchWithRetry(url, options, retries = 3) {
+            let delay = 1000;
+            for (let i = 0; i < retries; i++) {
+                try {
+                    // Introduce a minimum 500ms delay to ensure the loader is visible
+                    await new Promise(resolve => setTimeout(resolve, i === 0 ? 500 : delay));
+                    const response = await fetch(url, options);
+
+                    // If successful or client error, return the response immediately.
+                    if (response.ok || response.status < 500) {
+                        return response;
+                    }
+                    // For server errors (5xx), try again
+                } catch (error) {
+                    console.error(`Fetch attempt ${i + 1} failed:`, error);
+                    if (i === retries - 1) {
+                        throw new Error("Failed to connect to backend after multiple attempts.");
+                    }
+                }
+                delay *= 2; // Exponential backoff
+            }
+            throw new Error("Exceeded maximum retries.");
+        }
+
+
+        // --- Main Send Message Function ---
+        async function sendMessage() {
+            const text = chatInput.value.trim();
+            if (text === '') return;
+
+            // 1. Display user message
+            displayMessage(text, true);
+            chatInput.value = '';
+
+            // 2. Control UI state
+            toggleInputState(true);
+            showLoader();
+
+            try {
+                const response = await fetchWithRetry(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: sessionId,
+                        message: text
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error("API Error Response:", errorText);
+                    throw new Error(`Chat API returned status ${response.status}. See console for details.`);
+                }
+
+                const data = await response.json();
+                const botReply = data.reply || "Error: Bot returned an empty reply field.";
+
+                displayMessage(botReply, false);
+
+                // Log agent state for debugging purposes
+                console.log("Agent State:", {
+                    activeFlow: data.active_flow,
+                    awaitingField: data.awaiting_field
+                });
+
+            } catch (error) {
+                console.error("FATAL Chat Connection Error:", error);
+                displayMessage(`[Connection Error] Could not reach the chat service at ${API_URL}. Please ensure your FastAPI server is running.`, false);
+            } finally {
+                // 3. Restore UI state
+                hideLoader();
+                toggleInputState(false);
+            }
+        }
+
+        // Event listener for Enter key in the input field
+        chatInput.addEventListener('keypress', function (e) {
+            // Only send if the input is enabled (not disabled by the loader)
+            if (e.key === 'Enter' && !chatInput.disabled) {
+                sendMessage();
+            }
+        });
+
+
+        // --- UI State Management Functions ---
+        function openChat() {
+            chatWindow.classList.remove('hidden');
+            chatIcon.classList.add('hidden');
+            chatInput.focus(); // Focus on input when opening
+        }
+
+        function minimizeChat() {
+            // Minimize hides the window and shows the icon (the initial state)
+            chatWindow.classList.add('hidden');
+            chatIcon.classList.remove('hidden');
+            hideLoader(); // Ensure loader is hidden when minimized
+            toggleInputState(false); // Ensure input is enabled
+        }
+
+        function closeChat() {
+            // Close returns to the start state (the icon)
+            minimizeChat();
+        }
+
+        // Initialize: Ensure the icon is visible and the window is hidden on load
+        document.addEventListener('DOMContentLoaded', () => {
+            chatWindow.classList.add('hidden');
+            chatIcon.classList.remove('hidden');
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,12 @@
+python-dotenv
+pdfplumber
+chromadb
+rich
+vertexai
+langchain-text-splitters
+# sqlite3    # NOTE: sqlite3 is part of stdlib, keep for reference only
+fastapi
+uvicorn
+langgraph
+langchain
+pydantic
