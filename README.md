@@ -41,23 +41,18 @@ This project demonstrates how to build a **tool-driven, interrupt-aware, session
 
 ## High-Level Architecture
 
-Client (CLI / Browser)
-↓
-FastAPI (app.py)
-↓
-Session Store
-↓
-LangGraph
-↓
-Supervisor
-↓
-Intent Router
-↓
-┌─────────┬──────────┬─────────┐
-│ RAG │ EMI │ LOAN │
-└─────────┴──────────┴─────────┘
-↓
-Conversation State
+flowchart TD
+    A[Client<br/>(CLI / Browser)] --> B[FastAPI<br/>(app.py)]
+    B --> C[Session Store]
+    C --> D[LangGraph Workflow]
+    D --> E[Supervisor Node]
+    E --> F[Intent Router]
+    F --> G[RAG Tool]
+    F --> H[EMI Tool]
+    F --> I[Loan Tool]
+    G --> J[Conversation State]
+    H --> J
+    I --> J
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -96,12 +91,12 @@ OR
 uvicorn backend.app:app --reload (For HTML Interface)
 Then open frontend.html in brwoser.
 
-***Future Extensions***
+## Future Extensions
 Database-backed session persistence
 Authentication + OTP gating
 Multi-product expansion
 Streaming responses
 Production deployment (Docker / Cloud Run)
 
-Disclaimer
+## Disclaimer
 This system provides informational guidance only and is not a substitute for official financial advice or bank sanction processes.
