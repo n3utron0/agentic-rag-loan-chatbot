@@ -41,21 +41,33 @@ This project demonstrates how to build a **tool-driven, interrupt-aware, session
 
 ## High-Level Architecture
 
-flowchart TD
-    A[Client<br/>(CLI / Browser)] --> B[FastAPI<br/>(app.py)]
-    B --> C[Session Store]
-    C --> D[LangGraph Workflow]
-    
-    subgraph LangGraph
-        D --> E[Supervisor Node]
-        E --> F[Intent Router]
-        F --> G[RAG Tool]
-        F --> H[EMI Tool]
-        F --> I[Loan Tool]
-        G --> J[Conversation State]
-        H --> J
-        I --> J
-    end
+┌────────────────────────┐
+│   Client (CLI / Web)   │
+└────────────┬───────────┘
+             │
+┌────────────▼───────────┐
+│   FastAPI (app.py)     │
+└────────────┬───────────┘
+             │
+┌────────────▼───────────┐
+│     Session Store      │
+└────────────┬───────────┘
+             │
+┌────────────▼───────────┐
+│   LangGraph Workflow   │
+│  ┌─────────────────┐  │
+│  │   Supervisor     │  │
+│  └────────┬────────┘  │
+│           ▼            │
+│     Intent Router      │
+│    ┌──────┼──────┐    │
+│    ▼      ▼      ▼    │
+│   RAG    EMI    Loan   │
+└────────────┬───────────┘
+             │
+┌────────────▼───────────┐
+│   Conversation State   │
+└────────────────────────┘
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
