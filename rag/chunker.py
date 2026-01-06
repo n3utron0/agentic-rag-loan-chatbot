@@ -5,8 +5,8 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 # ------------------------------------------------------------
 # CONFIG
 # ------------------------------------------------------------
-RAW_DATA_FILE = "E:/Users/omkar/Documents/Learning/Machine Learning/Projects/RAG/data/pdf_extraction/raw_data.json"
-OUTPUT_CHUNKS_FILE = "E:/Users/omkar/Documents/Learning/Machine Learning/Projects/RAG/data/chunks/chunks.json"
+RAW_DATA_FILE = "./data/pdf_extraction/raw_data.json"
+OUTPUT_CHUNKS_FILE = "./data/chunks/chunks.json"
 
 CHUNK_SIZE = 800
 CHUNK_OVERLAP = 200
