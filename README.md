@@ -7,7 +7,6 @@ This project demonstrates how to build a **tool-driven, interrupt-aware, session
 ---
 
 ## Key Features
-
 - **Agentic Architecture**
   - Central supervisor orchestrates tool usage via LangGraph
   - Clean separation between reasoning, retrieval, and computation
@@ -39,6 +38,22 @@ This project demonstrates how to build a **tool-driven, interrupt-aware, session
 
 ---
 
+## High level architecture
+
+mermaid
+```
+graph TD
+    Client[Client: CLI/Browser] --> API[FastAPI]
+    API --> Graph[LangGraph Orchestrator]
+    Graph --> Router{Intent Router}
+    Router --> RAG[RAG Tool: PDF Search]
+    Router --> EMI[EMI Calculator]
+    Router --> Eligibility[Loan Eligibility]
+    RAG & EMI & Eligibility --> State[(Conversation State)]
+    State --> API
+```
+
+---
 ## Why This Project Exists
 
 Most RAG demos:
@@ -67,19 +82,29 @@ This project intentionally solves those problems using:
 ---
 
 ## How to Run (Local)
+```
 pip install -r requirements.txt
 python app.py
+```
+```
 python cli_app.py (For Command Line Interface)
+```
 OR
+```
 uvicorn backend.app:app --reload (For HTML Interface)
+```
 Then open frontend.html in brwoser.
 
 ## Future Extensions
-Database-backed session persistence
-Authentication + OTP gating
-Multi-product expansion
-Streaming responses
-Production deployment (Docker / Cloud Run)
+- Database-backed session persistence
+- Authentication + OTP gating
+- Multi-product expansion
+- Streaming responses
+- Production deployment (Docker / Cloud Run)
 
 ## Disclaimer
 This system provides informational guidance only and is not a substitute for official financial advice or bank sanction processes.
+
+## Author
+
+Omkar Backend / AI Engineering Portfolio Project
