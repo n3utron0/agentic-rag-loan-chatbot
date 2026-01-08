@@ -39,8 +39,7 @@ This project demonstrates how to build a **tool-driven, interrupt-aware, session
 ---
 
 ## High level architecture
-```
-mermaid
+```mermaid
 graph TD
     Client[Client: CLI/Browser] --> API[FastAPI]
     API --> Graph[LangGraph Orchestrator]
