@@ -84,12 +84,13 @@ This project intentionally solves those problems using:
 pip install -r requirements.txt
 python app.py
 ```
-
-```(For Command Line Interface)
+(For Command Line Interface)
+```
 python cli_app.py
 ```
 OR
-```(For HTML Interface)
+(For HTML Interface)
+```
 uvicorn backend.app:app --reload 
 ```
 Then open frontend.html in brwoser.
